@@ -4,6 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
+import { RichText } from '@wordpress/block-editor';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -29,10 +30,29 @@ import './editor.scss';
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit() {
+export default function Edit( { attributes, setAttributes } ) {
+	const { items } = attributes;
+	const blockProps = useBlockProps( {
+		className: 'todo-items',
+	} );
 	return (
-		<p { ...useBlockProps() }>
-			{ __( 'Todo List – hello from the editor!', 'todo-list' ) }
-		</p>
+		<ul { ...blockProps} >
+			{ items.map( ( item, index ) => (
+				<li key={ index }>
+					<RichText
+						value={ item.text }
+						onChange={ ( newValue ) => {
+							const newItems = items.map( ( item, i ) => {
+								if ( index === i ) {
+									item.text = newValue
+								}
+								return item;
+							} );
+							setAttributes( { items: newItems } );
+						} }
+					/>
+				</li>
+			) ) }
+		</ul>
 	);
 }
