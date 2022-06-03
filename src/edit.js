@@ -38,16 +38,12 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<ul { ...blockProps} >
 			{ items.map( ( item, index ) => (
-				<li key={ index }>
+				<li>
 					<RichText
 						value={ item.text }
 						onChange={ ( newValue ) => {
-							const newItems = items.map( ( item, i ) => {
-								if ( index === i ) {
-									item.text = newValue
-								}
-								return item;
-							} );
+							const newItems = [...items];
+							newItems[ index ].text = newValue;
 							setAttributes( { items: newItems } );
 						} }
 					/>
